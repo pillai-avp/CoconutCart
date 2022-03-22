@@ -3,7 +3,7 @@
     package="net.insi8.coconut">
 
     <application
-        android:name=".CoconutFlakesApplication"
+        android:name=".CoconutCartApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoconutFlakes">
         <activity
-            android:name=".list.GroceriesCartActivity"
+            android:name="net.insi8.coconut.ui.list.GroceriesCartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

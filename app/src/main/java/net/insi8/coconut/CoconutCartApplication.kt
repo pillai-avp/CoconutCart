@@ -2,12 +2,12 @@ package net.insi8.coconut
 
 import android.app.Application
 import net.insi8.coconut.api.modules.apiModule
-import net.insi8.coconut.list.groceriesCartModule
+import net.insi8.coconut.ui.list.groceriesCartModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import timber.log.Timber
 
-class CoconutFlakesApplication : Application() {
+class CoconutCartApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoin()
@@ -16,7 +16,7 @@ class CoconutFlakesApplication : Application() {
 
     private fun initKoin() {
         startKoin {
-            androidContext(this@CoconutFlakesApplication)
+            androidContext(this@CoconutCartApplication)
             modules(
                 apiModule,
                 groceriesCartModule

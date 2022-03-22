@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CoconutFlakes</string>
+    <string name="general_error_message">Something went wrong. Please try again later</string>
+    <string name="loading">Loading... </string>
 </resources>

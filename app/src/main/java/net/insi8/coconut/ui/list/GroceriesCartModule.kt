@@ -1,4 +1,4 @@
-package net.insi8.coconut.list
+package net.insi8.coconut.ui.list
 
 import net.insi8.coconut.api.datasource.GroceriesCartDataSource
 import net.insi8.coconut.api.datasource.GroceriesCartRepository
