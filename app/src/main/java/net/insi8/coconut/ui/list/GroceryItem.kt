@@ -1,6 +1,7 @@
 package net.insi8.coconut.ui.list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +21,7 @@ import timber.log.Timber
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun GroceryItem(cartItems: Item) {
+fun GroceryItem(cartItems: Item, onUpdateCart: ((Long, Long) -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,7 +56,12 @@ fun GroceryItem(cartItems: Item) {
                 product.grossPrice,
                 product.grossUnitPrice,
                 product.unitPriceQuantityAbbreviation,
-                cartItems.quantity
+                cartItems.quantity,
+                onUpdateCart = { quantity ->
+                    if (onUpdateCart != null) {
+                        onUpdateCart(product.id, quantity)
+                    }
+                }
             )
         }
     }
@@ -72,7 +78,8 @@ private fun PriceAndQuantity(
     grossPrice: String,
     grossUnitPrice: String,
     unitPriceQuantityAbbreviation: String,
-    quantity: Long
+    quantity: Long,
+    onUpdateCart: (Long) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -86,13 +93,17 @@ private fun PriceAndQuantity(
             fontSize = 12.sp,
             modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_small))
         )
-        ItemQuantity(modifier = Modifier.weight(1f), quantity = quantity)
+        ItemQuantity(
+            modifier = Modifier.weight(1f),
+            quantity = quantity,
+            onUpdateCart = onUpdateCart
+        )
 
     }
 }
 
 @Composable
-private fun ItemQuantity(modifier: Modifier, quantity: Long) {
+private fun ItemQuantity(modifier: Modifier, quantity: Long, onUpdateCart: (Long) -> Unit) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -101,12 +112,18 @@ private fun ItemQuantity(modifier: Modifier, quantity: Long) {
         if (quantity == 0L) {
             Image(
                 painter = painterResource(id = R.drawable.ic_stepper_yellow_40),
-                contentDescription = null
+                contentDescription = null,
+                Modifier.clickable {
+                    onUpdateCart.invoke(quantity + 1)
+                }
             )
         } else {
             Image(
                 painter = painterResource(id = R.drawable.ic_decrease_34),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onUpdateCart.invoke(quantity - 1)
+                }
             )
             Text(
                 text = quantity.toString(),
@@ -119,7 +136,10 @@ private fun ItemQuantity(modifier: Modifier, quantity: Long) {
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_increase_34),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onUpdateCart.invoke(quantity + 1)
+                }
             )
         }
     }
@@ -135,7 +155,10 @@ fun GroceryItemPreview() {
             grossPrice = "33.00",
             grossUnitPrice = "44.00",
             unitPriceQuantityAbbreviation = "kg",
-            quantity = 1L
+            quantity = 1L,
+            onUpdateCart = { quantity ->
+
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -144,7 +167,10 @@ fun GroceryItemPreview() {
             grossPrice = "33.00",
             grossUnitPrice = "44.00",
             unitPriceQuantityAbbreviation = "kg",
-            quantity = 0L
+            quantity = 0L,
+            onUpdateCart = { quantity ->
+
+            }
         )
     }
 }

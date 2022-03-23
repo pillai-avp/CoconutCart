@@ -2,6 +2,7 @@ package net.insi8.coconut
 
 import android.app.Application
 import net.insi8.coconut.api.modules.apiModule
+import net.insi8.coconut.api.modules.dataBaseModule
 import net.insi8.coconut.ui.list.groceriesCartModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
@@ -19,13 +20,10 @@ class CoconutCartApplication : Application() {
             androidContext(this@CoconutCartApplication)
             modules(
                 apiModule,
-                groceriesCartModule
+                groceriesCartModule,
+                dataBaseModule
             )
         }
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
     }
 
     private fun configureTimber() {
