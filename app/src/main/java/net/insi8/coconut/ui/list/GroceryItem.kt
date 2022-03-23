@@ -146,6 +146,31 @@ private fun ItemQuantity(modifier: Modifier, quantity: Long, onUpdateCart: (Long
 }
 
 @Composable
+fun ShowMeTheMoneyListItem(money: ShowMeTheMoney) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.margin_normal),
+                vertical = dimensionResource(
+                    id = R.dimen.margin_small
+                )
+            )
+            .defaultMinSize(minHeight = 46.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "${money.totalNumberOfItems} Items", modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp)
+        )
+        Text(
+            text = "Total --- ${money.grandTotalPrice} Kr",
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
+
+@Composable
 @Preview(showBackground = true)
 fun GroceryItemPreview() {
     Column {
@@ -169,8 +194,9 @@ fun GroceryItemPreview() {
             unitPriceQuantityAbbreviation = "kg",
             quantity = 0L,
             onUpdateCart = { quantity ->
-
             }
         )
+
+        ShowMeTheMoneyListItem(ShowMeTheMoney(6, "666.66"))
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.insi8.coconut.R
-import net.insi8.coconut.api.data.Cart
 import net.insi8.coconut.ui.theme.CoconutTheme
 import org.koin.androidx.compose.getViewModel
 
@@ -67,7 +66,7 @@ fun GroceriesCartContent() {
 @Composable
 fun GroceriesCart(state: GroceriesCartState, onUpdateCart: (Long, Long) -> Unit) {
     when (state) {
-        is GroceriesCartState.Done -> GroceriesCartList(state.cart, onUpdateCart)
+        is GroceriesCartState.Done -> GroceriesCartList(state.items, onUpdateCart)
         is GroceriesCartState.Loading -> GroceriesCartLoading()
     }
 }
@@ -84,10 +83,17 @@ fun GroceriesCartLoading() {
 }
 
 @Composable
-fun GroceriesCartList(cart: Cart, onUpdateCart: (Long, Long) -> Unit) {
+fun GroceriesCartList(cartListItems: List<CartListItem>, onUpdateCart: (Long, Long) -> Unit) {
     LazyColumn(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_large))) {
-        items(cart.items) { cartItems ->
-            GroceryItem(cartItems, onUpdateCart = onUpdateCart)
+        items(cartListItems) { viewItem ->
+            when (viewItem) {
+                is CartListItem.ProductItem -> GroceryItem(
+                    viewItem.item,
+                    onUpdateCart = onUpdateCart
+                )
+                is CartListItem.ExtraDataItem -> ShowMeTheMoneyListItem(viewItem.money)
+            }
+
         }
     }
 }
