@@ -50,59 +50,101 @@ fun GroceryItem(cartItems: Item) {
                 .weight(1f)
                 .padding(start = dimensionResource(id = R.dimen.margin_small))
         ) {
-            Text(text = product.name, fontSize = 16.sp)
-            Text(text = product.nameExtra, fontSize = 12.sp)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = dimensionResource(id = R.dimen.margin_small)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = product.grossPrice, fontSize = 16.sp)
-                Text(
-                    text = "${product.grossUnitPrice}/${product.unitPriceQuantityAbbreviation}",
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_small))
-                )
-
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    if (cartItems.quantity == 0L) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_stepper_yellow_40),
-                            contentDescription = null
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_decrease_34),
-                            contentDescription = null
-                        )
-                        Text(
-                            text = cartItems.quantity.toString(),
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(
-                                horizontal = dimensionResource(
-                                    id = R.dimen.margin_small
-                                )
-                            )
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_increase_34),
-                            contentDescription = null
-                        )
-                    }
-                }
-
-            }
+            ProductName(product.name, product.nameExtra)
+            PriceAndQuantity(
+                product.grossPrice,
+                product.grossUnitPrice,
+                product.unitPriceQuantityAbbreviation,
+                cartItems.quantity
+            )
         }
     }
 }
 
 @Composable
-@Preview
-fun GroceryItemPreview() {
+private fun ProductName(name: String, nameExtra: String) {
+    Text(text = name, fontSize = 16.sp)
+    Text(text = nameExtra, fontSize = 12.sp)
+}
 
+@Composable
+private fun PriceAndQuantity(
+    grossPrice: String,
+    grossUnitPrice: String,
+    unitPriceQuantityAbbreviation: String,
+    quantity: Long
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = dimensionResource(id = R.dimen.margin_small)),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = grossPrice, fontSize = 16.sp)
+        Text(
+            text = "${grossUnitPrice}/${unitPriceQuantityAbbreviation}",
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_small))
+        )
+        ItemQuantity(modifier = Modifier.weight(1f), quantity = quantity)
+
+    }
+}
+
+@Composable
+private fun ItemQuantity(modifier: Modifier, quantity: Long) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        if (quantity == 0L) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_stepper_yellow_40),
+                contentDescription = null
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.ic_decrease_34),
+                contentDescription = null
+            )
+            Text(
+                text = quantity.toString(),
+                fontSize = 14.sp,
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(
+                        id = R.dimen.margin_small
+                    )
+                )
+            )
+            Image(
+                painter = painterResource(id = R.drawable.ic_increase_34),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun GroceryItemPreview() {
+    Column {
+
+        ProductName(name = "Greek Yogurt", nameExtra = "Greek 750 g")
+        PriceAndQuantity(
+            grossPrice = "33.00",
+            grossUnitPrice = "44.00",
+            unitPriceQuantityAbbreviation = "kg",
+            quantity = 1L
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ProductName(name = "Greek Yogurt", nameExtra = "Greek 750 g")
+        PriceAndQuantity(
+            grossPrice = "33.00",
+            grossUnitPrice = "44.00",
+            unitPriceQuantityAbbreviation = "kg",
+            quantity = 0L
+        )
+    }
 }
