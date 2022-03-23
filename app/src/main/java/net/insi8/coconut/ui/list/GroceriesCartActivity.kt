@@ -6,17 +6,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -28,21 +27,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.insi8.coconut.R
 import net.insi8.coconut.api.data.Cart
+import net.insi8.coconut.api.data.Item
 import net.insi8.coconut.ui.theme.CoconutTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.getViewModel
 
 class GroceriesCartActivity : AppCompatActivity() {
 
-    private val viewModel: GroceriesCartViewModel by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ComposeView(this).apply {
             // Dispose the Composition when viewLifecycleOwner is destroyed
-            /*setViewCompositionStrategy(
+            setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(lifecycleOwner = this@GroceriesCartActivity)
-            )*/
+            )
             setContent {
                 CoconutTheme {
                     GroceriesCartContent()
@@ -61,7 +59,7 @@ fun GroceriesCartContent() {
     Scaffold(topBar = {
         TopAppBar(
             title = {
-                Text(text = "Cart", fontSize = 24.sp)
+                Text(text = "Cart", fontSize = 24.sp, color = Color.White)
             },
             elevation = 2.dp
         )
@@ -92,7 +90,7 @@ fun GroceriesCartLoading() {
 fun GroceriesCartList(cart: Cart) {
     LazyColumn(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_large))) {
         items(cart.items) { cartItems ->
-
+            GroceryItem(cartItems)
         }
     }
 }
@@ -100,5 +98,7 @@ fun GroceriesCartList(cart: Cart) {
 @Preview
 @Composable
 fun GroceriesCartLoadingPreview() {
-    GroceriesCartLoading()
+    CoconutTheme {
+        GroceriesCartLoading()
+    }
 }

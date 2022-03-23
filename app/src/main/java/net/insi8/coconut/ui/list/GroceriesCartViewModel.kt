@@ -18,7 +18,7 @@ class GroceriesCartViewModel(private val cartDataSource: GroceriesCartDataSource
     val viewState = _viewState.asStateFlow()
 
     init {
-        //getGroceriesCart()
+        getGroceriesCart()
     }
 
     private fun getGroceriesCart() {
