@@ -14,7 +14,7 @@ class GroceriesCartUseCase(
     private val dataSource: GroceriesCartDataSource,
     private val cartDao: CartDao
 ) {
-
+    // Using state flow to keep the data.
     private val _cartState: MutableStateFlow<Cart?> =
         MutableStateFlow(null)
     val cartState = _cartState.asStateFlow()
@@ -30,30 +30,56 @@ class GroceriesCartUseCase(
     }
 
     private suspend fun syncLocalData(cart: Cart) {
-        val networkCartItems =
-            cart.items.map { CartEntity(product_id = it.product.id, quantity = it.quantity) }
-        val localCartItems = cartDao.gelAllCartItems()
-        val syncedLocalCartItems = localCartItems.filter { it.synced }
-        val notSyncedLocalCartItems = localCartItems.filterNot { it.synced }
+        coroutineScope {
+            launch {
+                val networkCartItems =
+                    cart.items.map {
+                        CartEntity(
+                            product_id = it.product.id,
+                            quantity = it.quantity
+                        )
+                    }
 
-        // new from server
-        networkCartItems.filterNot { networkItems ->
-            localCartItems.map { it.product_id }.contains(networkItems.product_id)
-        }.map {
-            cartDao.insertItem(item = it)
-        }
-        // update synced from network
-        networkCartItems.filter { networkItems ->
-            syncedLocalCartItems.map { it.product_id }.contains(networkItems.product_id)
-        }.map {
-            cartDao.updateItem(cart = it)
-        }
-        // Update the remote cart
-        updateRemoteCart(cartItems = mutableMapOf<Long, Long>().apply {
-            notSyncedLocalCartItems.forEach {
-                this[it.product_id] = it.quantity
+                val localCartItems = cartDao.gelAllCartItems()
+                val syncedLocalCartItems = localCartItems.filter { it.synced }
+                val notSyncedLocalCartItems = localCartItems.filterNot { it.synced }
+
+                networkCartItems.forEach { networkEntry ->
+                    val localItem =
+                        localCartItems.firstOrNull { it.product_id == networkEntry.product_id }
+                    if (localItem != null) {
+                        if (localItem.synced) {
+                            // Update synced Item
+                            cartDao.updateItem(networkEntry)
+                        }
+                    } else {
+                        // Insert new item
+                        cartDao.insertItem(item = networkEntry)
+                    }
+                }
+                // Delete non-available synced data
+                syncedLocalCartItems.filterNot { localSynced ->
+                    networkCartItems.map { it.product_id }.contains(localSynced.product_id)
+                }.forEach {
+                    cartDao.deleteItem(it)
+                }
+
+                // Update the remote cart
+                updateRemoteCart(cartItems = mutableMapOf<Long, Long>().apply {
+                    notSyncedLocalCartItems.forEach {
+                        this[it.product_id] = it.quantity
+                    }
+                })
+
+                // Update the state after sync
+                val allLocalDataAfterSync = cartDao.gelAllCartItems()
+                updateCartState(cartItems = mutableMapOf<Long, Long>().apply {
+                    allLocalDataAfterSync.forEach {
+                        this[it.product_id] = it.quantity
+                    }
+                }, synced = true)
             }
-        })
+        }
     }
 
     suspend fun updateCartItem(productId: Long, updatedQuantity: Long) {

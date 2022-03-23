@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +43,6 @@ class GroceriesCartActivity : AppCompatActivity() {
 
 @Composable
 fun GroceriesCartContent() {
-    val context = LocalContext.current
     val viewModel = getViewModel<GroceriesCartViewModel>()
     val viewState by viewModel.viewState.collectAsState(GroceriesCartState.Loading)
 

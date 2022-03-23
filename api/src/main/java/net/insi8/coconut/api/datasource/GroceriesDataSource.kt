@@ -18,6 +18,9 @@ class GroceriesCartRepository(private val coconutAPI: CoconutAPI) : GroceriesCar
         return coconutAPI.getCart().awaitResponse().toResult()
     }
 
+    /**
+     * I asssume the update cart will return the list of cart items.
+     */
     override suspend fun updateCart(cartItems: Map<Long, Long>): Result<List<Item>> {
         delay(800L)
         return Result.successIfNotNull(emptyList<Item>())

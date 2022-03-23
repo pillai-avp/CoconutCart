@@ -5,18 +5,23 @@ package net.insi8.coconut.common
  * for a value that is going to be loaded. This means we don't have to use nullable variables
  * and assume that if the value is null its not yet loaded.
  */
+/*
 sealed class Loadable<out T> {
-    /**
-     * The value has not yet been loaded
-     */
+    */
+/**
+ * The value has not yet been loaded
+ *//*
+
     object Loading : Loadable<Nothing>()
 
-    /**
-     * The value is loaded and should be access via the data member
-     */
+    */
+/**
+ * The value is loaded and should be access via the data member
+ *//*
+
     data class Done<T>(val data: T) : Loadable<T>()
 
     fun asDoneOrNull(): T? = (this as? Done)?.data
 
     fun isLoaded() = this is Done
-}
+}*/
