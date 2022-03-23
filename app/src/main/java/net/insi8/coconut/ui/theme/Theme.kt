@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
-    primaryVariant = Purple700,
+    primaryVariant = Purple500,
     secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
     primary = Purple500,
-    primaryVariant = Purple700,
+    primaryVariant = Purple500,
     secondary = Teal200
 
     /* Other default colors to override
@@ -29,7 +29,7 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun CoconutTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {

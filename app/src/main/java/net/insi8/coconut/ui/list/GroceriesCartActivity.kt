@@ -2,10 +2,14 @@ package net.insi8.coconut.ui.list
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,11 +17,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import net.insi8.coconut.R
 import net.insi8.coconut.api.data.Cart
+import net.insi8.coconut.ui.theme.CoconutTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.getViewModel
 
@@ -33,7 +44,9 @@ class GroceriesCartActivity : AppCompatActivity() {
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(lifecycleOwner = this@GroceriesCartActivity)
             )*/
             setContent {
-                GroceriesCartLoading()
+                CoconutTheme {
+                    GroceriesCartContent()
+                }
             }
         })
     }
@@ -44,6 +57,15 @@ fun GroceriesCartContent() {
     val context = LocalContext.current
     val viewModel = getViewModel<GroceriesCartViewModel>()
     val viewState by viewModel.viewState.collectAsState()
+
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Text(text = "Cart", fontSize = 24.sp)
+            },
+            elevation = 2.dp
+        )
+    }, content = { GroceriesCart(viewState) })
 
 }
 
@@ -68,7 +90,11 @@ fun GroceriesCartLoading() {
 
 @Composable
 fun GroceriesCartList(cart: Cart) {
-    TODO("Not yet implemented")
+    LazyColumn(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_large))) {
+        items(cart.items) { cartItems ->
+
+        }
+    }
 }
 
 @Preview
